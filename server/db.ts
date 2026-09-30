@@ -31,6 +31,13 @@ export async function connectDB() {
     return;
   }
 
+  mongoose.connection.on('error', (err) => {
+    console.error('MongoDB runtime error:', err);
+  });
+  mongoose.connection.on('disconnected', () => {
+    console.warn('MongoDB disconnected. Automatic reconnection active.');
+  });
+
   try {
     console.log('🔌 Connecting to MongoDB Atlas (mongobb database)...');
     await mongoose.connect(MONGODB_URI);

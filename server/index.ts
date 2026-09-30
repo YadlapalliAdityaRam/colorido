@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import path from 'path';
+import fs from 'fs';
 import { connectDB } from './db';
 import { 
   AdminModel,
@@ -28,18 +30,38 @@ const PORT = process.env.PORT || 5000;
 
 const allowedOrigins = (process.env.CORS_ORIGINS || '')
   .split(',')
-  .map(origin => origin.trim())
+  .map(origin => origin.trim().replace(/\/+$/, ''))
   .filter(Boolean);
+
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || process.env.NODE_ENV !== 'production' || allowedOrigins.includes(origin)) {
+    const normalizedOrigin = origin ? origin.replace(/\/+$/, '') : '';
+    if (
+      !origin ||
+      process.env.NODE_ENV !== 'production' ||
+      allowedOrigins.length === 0 ||
+      allowedOrigins.includes('*') ||
+      allowedOrigins.includes(normalizedOrigin)
+    ) {
       callback(null, true);
       return;
     }
-    callback(new Error('Origin is not allowed by the server CORS policy.'));
+    callback(new Error(`Origin ${origin} is not allowed by CORS policy.`));
   },
+  credentials: true,
 }));
 app.use(express.json({ limit: '10mb' }));
+
+// Health Check API
+app.get('/api/health', (_req, res) => {
+  res.json({
+    status: 'healthy',
+    service: 'colorido-2k26-api',
+    time: new Date().toISOString(),
+    uptime: process.uptime(),
+    db: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+  });
+});
 
 // Initialize MongoDB Atlas Connection & Seed Script
 connectDB();
@@ -1165,6 +1187,26 @@ app.delete('/api/media/:id', async (req, res) => {
   } catch (err: any) {
     res.status(500).json({ error: 'Failed to delete media item', details: err.message });
   }
+});
+
+// Production Static Frontend Serving (Vite dist bundle)
+const distPath = path.resolve(process.cwd(), 'dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.use((req, res, next) => {
+    if (req.method === 'GET' && !req.path.startsWith('/api')) {
+      return res.sendFile(path.join(distPath, 'index.html'));
+    }
+    next();
+  });
+}
+
+// Global unhandled error middleware (JSON error response)
+app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error('Unhandled server error:', err);
+  res.status(err.status || 500).json({
+    error: err.message || 'Internal server error',
+  });
 });
 
 app.listen(PORT, () => {
