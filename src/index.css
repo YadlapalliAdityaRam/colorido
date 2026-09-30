@@ -1,0 +1,85 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-heading: 'Cinzel', 'Playfair Display', serif;
+    --font-serif: 'Playfair Display', Georgia, serif;
+    --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    /* Institutional Color System: R.V.R. & J.C. College of Engineering */
+    --color-maroon: #800020;        /* Official Deep Maroon */
+    --color-maroon-dark: #580016;   /* Darker Maroon */
+    --color-maroon-light: #FDF2F4;  /* Very subtle maroon tint */
+    --color-gold: #B45309;          /* Restrained Deep Gold/Bronze */
+    --color-gold-light: #FFFBEB;    /* Subtle Gold Tint */
+    --color-navy: #1E293B;          /* Academic Slate/Navy */
+    --color-bg: #FAF9F6;            /* Clean Warm Architectural Off-White */
+    --color-surface: #FFFFFF;       /* Crisp White Card Surface */
+    --color-surface-subtle: #F4F2EC;/* Subtle Ivory Tint */
+    --color-text-primary: #0F172A;  /* Deep Slate (Crisp, High Contrast) */
+    --color-text-secondary: #475569;/* Slate Gray */
+    --color-text-muted: #64748B;    /* Muted Slate */
+    --color-border: #E2E8F0;        /* Clean Structural Border */
+    --color-border-warm: #E6E1D6;   /* Warm Institutional Border */
+  }
+
+  html {
+    font-family: var(--font-body);
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-cinzel {
+    font-family: 'Cinzel', serif;
+    letter-spacing: 0.015em;
+  }
+
+  .font-serif-editorial {
+    font-family: 'Playfair Display', Georgia, serif;
+  }
+}
+
+/* Institutional Design System Utilities */
+.scrim-dark {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0) 0%, rgba(15, 23, 42, 0.5) 50%, rgba(15, 23, 42, 0.9) 100%);
+}
+
+.scrim-subtle {
+  background: linear-gradient(180deg, rgba(250, 249, 246, 0) 0%, rgba(250, 249, 246, 0.75) 60%, rgba(250, 249, 246, 0.98) 100%);
+}
+
+/* Subtle, purposeful custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F1EFE9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Mobile responsive touch helpers */
+@media (max-width: 640px) {
+  .touch-scroll {
+    -webkit-overflow-scrolling: touch;
+  }
+}

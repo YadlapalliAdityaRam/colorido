@@ -1,0 +1,679 @@
+/* COLORIDO 2K26 — NIGHT FESTIVAL THEME
+   Isolated styles. Delete this file (and the nightFestival folder) to revert. */
+
+.nf-home-theme {
+  /* Preserve the existing image; layered gradients supply the night treatment. */
+  background-image:
+    radial-gradient(ellipse 78% 68% at 50% 42%, rgba(35, 48, 104, 0.20) 0%, rgba(12, 19, 52, 0.42) 58%, rgba(3, 7, 22, 0.68) 100%),
+    linear-gradient(to bottom, rgba(8, 13, 36, 0.28), rgba(4, 8, 25, 0.48)),
+    url('/image5.jpg');
+}
+
+/* Site-wide festival palette. All overrides are opt-in through the App shell. */
+.nf-site-theme {
+  position: relative;
+  isolation: isolate;
+  color-scheme: dark;
+  width: 100%;
+  min-width: 0;
+  background-color: #080f24;
+  background-image:
+    radial-gradient(ellipse 90% 44% at 50% 0%, rgba(45, 65, 129, 0.30), transparent 72%),
+    linear-gradient(180deg, #0b1430 0%, #080f24 52%, #0a1023 100%);
+}
+
+/* Shared mobile safety net: let existing page layouts shrink without changing
+   their structure, while keeping wide data and media usable inside the viewport. */
+.nf-site-theme :where(*) {
+  min-width: 0;
+}
+
+.nf-site-theme :where(img, video, canvas, iframe) {
+  max-width: 100%;
+}
+
+.nf-site-theme :where(pre) {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+@media (max-width: 640px) {
+  html:has(.nf-site-theme) {
+    overflow-x: clip;
+  }
+
+  .nf-site-theme,
+  .nf-site-theme main,
+  .nf-site-theme header,
+  .nf-site-theme footer {
+    max-width: 100%;
+  }
+
+  .nf-site-theme :where(input, select, textarea) {
+    max-width: 100%;
+  }
+
+  .nf-site-theme :where(table) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+.nf-site-theme > :not(.nf-layer):not(.nf-modal-layer):not(.festival-cursor-glow):not(.festival-entry) {
+  position: relative;
+  z-index: 20;
+}
+
+.nf-site-theme > header {
+  background-color: rgba(8, 15, 36, 0.91) !important;
+  border-color: rgba(169, 185, 224, 0.20) !important;
+  z-index: 50 !important;
+}
+
+.nf-site-theme > header nav button[class*="text-[#0F172A]"] {
+  color: #dce5f7 !important;
+}
+
+.nf-site-theme > header nav button[class*="text-[#800020]"] {
+  color: #e2bf76 !important;
+  border-color: #c5a059 !important;
+}
+
+.nf-site-theme > header > div:first-child > div:first-child > div span:first-child {
+  color: #d8bc80 !important;
+}
+
+.nf-site-theme > header > div:first-child > div:first-child > div span:nth-child(2) {
+  color: #c7d0e3 !important;
+}
+
+.nf-site-theme > header nav .bg-white,
+.nf-site-theme > header > div.bg-white {
+  background-color: #111d3a !important;
+  border-color: rgba(169, 185, 224, 0.22) !important;
+}
+
+.nf-site-theme > header nav [class*="bg-white"] {
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.42) !important;
+}
+
+.nf-site-theme > header nav button[class*="hover:bg-[#F8FAFC]"]:hover {
+  background-color: rgba(87, 111, 174, 0.20) !important;
+  color: #e5c77f !important;
+}
+
+.nf-site-theme > header nav button[class*="border-t"] {
+  border-color: rgba(169, 185, 224, 0.16) !important;
+}
+
+.nf-site-theme > header nav [class*="text-[#0F172A]"],
+.nf-site-theme > header > div.bg-white [class*="text-[#0F172A]"] {
+  color: #e3e9f5 !important;
+}
+
+.nf-site-theme > header > div:first-child button[aria-label="Search"],
+.nf-site-theme > header > div:first-child button[aria-label="Open navigation menu"] {
+  color: #dce5f7 !important;
+}
+
+.nf-site-theme > header > div:first-child button[aria-label="Open navigation menu"] {
+  background-color: rgba(255, 255, 255, 0.10) !important;
+  border-color: rgba(220, 229, 247, 0.42) !important;
+}
+
+.nf-site-theme > header > div:first-child button[aria-label="Open navigation menu"]:hover {
+  background-color: rgba(255, 255, 255, 0.20) !important;
+}
+
+.nf-site-theme > footer {
+  background-color: #0b1430 !important;
+  border-color: rgba(197, 160, 89, 0.62) !important;
+}
+
+.nf-site-theme.nf-maintenance-theme {
+  background-color: #080f24 !important;
+  background-image: radial-gradient(ellipse at 50% 30%, rgba(56, 77, 145, 0.36), transparent 65%) !important;
+  color: #f5f4f1 !important;
+}
+
+.nf-maintenance-theme h1 {
+  color: #f5f4f1 !important;
+}
+
+.nf-site-theme main > div:not(.nf-home-theme) {
+  background-color: transparent !important;
+  color: #f4f3f0 !important;
+}
+
+/* Preserve the Sports/Cultural venue photos while replacing their pale wash with night-blue haze. */
+.nf-site-theme main > div[style*="cultural_bG.jpg"] {
+  background-image:
+    linear-gradient(to bottom, rgba(5, 12, 32, 0.72), rgba(7, 14, 38, 0.82)),
+    url('/cultural_bG.jpg') !important;
+}
+
+.nf-site-theme main > div[style*="background_image_for_sports_page.jpg"] {
+  background-image:
+    linear-gradient(to bottom, rgba(5, 12, 32, 0.72), rgba(7, 14, 38, 0.82)),
+    url('/background_image_for_sports_page.jpg') !important;
+}
+
+/* Re-skin the existing light surfaces as restrained midnight-glass panels. */
+.nf-site-theme main [class*="bg-white"],
+.nf-site-theme main [class*="bg-[#FAF"],
+.nf-site-theme main [class*="bg-[#F5F"],
+.nf-site-theme main [class*="bg-[#F7F"],
+.nf-site-theme main [class*="bg-[#FFF"],
+.nf-site-theme main [class~="bg-gray-50"],
+.nf-site-theme main [class~="bg-gray-100"],
+.nf-site-theme main [class~="bg-stone-50"] {
+  background-color: rgba(19, 29, 57, 0.86) !important;
+}
+
+.nf-site-theme main [class*="bg-amber-50"],
+.nf-site-theme main [class*="bg-violet-50"],
+.nf-site-theme main [class*="bg-emerald-50"],
+.nf-site-theme main [class*="bg-rose-50"] {
+  background-color: rgba(26, 40, 72, 0.94) !important;
+  background-image: none !important;
+  border-color: rgba(169, 185, 224, 0.24) !important;
+}
+
+.nf-site-theme main [class~="bg-stone-100"] {
+  background-color: rgba(48, 62, 96, 0.82) !important;
+}
+
+.nf-site-theme main [class*="bg-stone-50"],
+.nf-site-theme main [class*="bg-stone-200"] {
+  background-color: rgba(31, 44, 76, 0.88) !important;
+}
+
+/* Gallery stack title strip: keep the light-theme gradient from washing out its text. */
+.nf-site-theme main [class*="bg-gradient-to-r"][class*="from-[#FAF8F3]"] {
+  background-image: linear-gradient(105deg, #101a34 0%, #182643 52%, #101a34 100%) !important;
+}
+
+.nf-site-theme main [class*="bg-gradient-to-r"][class*="from-[#FAF8F3]"] [class*="text-[#800020]"] {
+  color: #e2bf76 !important;
+}
+
+.nf-site-theme main [class*="bg-gradient-to-r"][class*="from-[#FAF8F3]"] [class*="text-[#6C665F]"] {
+  color: #bdc9df !important;
+}
+
+/* Darken existing cream gradient sections so light festival text stays legible. */
+.nf-site-theme main [class*="bg-gradient"][class*="from-[#FA"],
+.nf-site-theme main [class*="bg-gradient"][class*="from-[#F5"],
+.nf-site-theme main [class*="bg-gradient"][class*="via-[#FA"] {
+  background-image: linear-gradient(180deg, #101a34 0%, #0b142b 55%, #0a1228 100%) !important;
+}
+
+.nf-site-theme main [class*="border-[#E"],
+.nf-site-theme main [class*="border-gray-200"],
+.nf-site-theme main [class*="border-stone-200"] {
+  border-color: rgba(169, 185, 224, 0.20) !important;
+}
+
+.nf-site-theme main [class*="text-[#1C1917]"],
+.nf-site-theme main [class*="text-[#121212]"],
+.nf-site-theme main [class*="text-[#0F172A]"],
+.nf-site-theme main [class*="text-gray-900"] {
+  color: #f5f4f1 !important;
+}
+
+.nf-site-theme main [class*="text-[#6C665F]"],
+.nf-site-theme main [class*="text-[#666461]"],
+.nf-site-theme main [class*="text-[#64748B]"],
+.nf-site-theme main [class*="text-gray-600"],
+.nf-site-theme main [class*="text-gray-500"] {
+  color: #b8c3dc !important;
+}
+
+.nf-site-theme main [class*="text-emerald-800"],
+.nf-site-theme main [class*="text-emerald-900"],
+.nf-site-theme main [class*="text-amber-800"],
+.nf-site-theme main [class*="text-amber-900"],
+.nf-site-theme main [class*="text-rose-700"],
+.nf-site-theme main [class*="text-rose-800"],
+.nf-site-theme main [class*="text-violet-700"],
+.nf-site-theme main [class*="text-violet-800"] {
+  color: #e2bf76 !important;
+}
+
+/* Admin utility palette uses Tailwind stone tokens rather than the public-page tokens above. */
+.nf-admin-theme main [class*="text-stone-900"],
+.nf-admin-theme main [class*="text-stone-800"],
+.nf-admin-theme main [class*="text-stone-700"],
+.nf-admin-theme main [class*="text-black"] {
+  color: #edf2fc !important;
+}
+
+.nf-admin-theme main [class*="text-stone-600"],
+.nf-admin-theme main [class*="text-stone-500"] {
+  color: #b4c0d8 !important;
+}
+
+.nf-admin-theme .nf-lighting,
+.nf-admin-theme .nf-light-particles {
+  display: none !important;
+}
+
+.nf-site-theme main input:not([type="checkbox"]):not([type="radio"]),
+.nf-site-theme main select,
+.nf-site-theme main textarea {
+  color-scheme: dark;
+}
+
+.nf-site-theme main input::placeholder,
+.nf-site-theme main textarea::placeholder {
+  color: #9ba9c7;
+}
+
+/* Keep root-level dialogs (search, event details, registration) in the same palette. */
+.nf-site-theme > [class*="fixed"][class*="inset-0"] [class*="bg-white"],
+.nf-site-theme > [class*="fixed"][class*="inset-0"] [class*="bg-[#FAF"],
+.nf-site-theme > [class*="fixed"][class*="inset-0"] [class*="bg-[#F5F"] {
+  background-color: #111d3a !important;
+}
+
+.nf-site-theme > [class*="fixed"][class*="inset-0"] [class*="text-[#121212]"],
+.nf-site-theme > [class*="fixed"][class*="inset-0"] [class*="text-[#1C1917]"],
+.nf-site-theme > [class*="fixed"][class*="inset-0"] [class*="text-[#0F172A]"] {
+  color: #f2f4f8 !important;
+}
+
+.nf-site-theme > [class*="fixed"][class*="inset-0"] [class*="border-[#E"] {
+  border-color: rgba(169, 185, 224, 0.22) !important;
+}
+
+/* Registration has its own event-specific artwork; keep its controls legible in the site theme. */
+.nf-registration-wizard > div:first-child {
+  color: #f5f4f1 !important;
+  background-color: #101a34 !important;
+  background-image: linear-gradient(160deg, #152344 0%, #101a34 58%, #0d1730 100%) !important;
+  border: 1px solid rgba(197, 160, 89, 0.42) !important;
+}
+
+.nf-registration-wizard > div:first-child > div:first-child,
+.nf-registration-wizard > div:first-child > div:nth-child(2),
+.nf-registration-wizard > div:first-child > div:last-child {
+  background-color: #101a34 !important;
+  border-color: rgba(169, 185, 224, 0.22) !important;
+}
+
+.nf-registration-wizard [class*="bg-gradient-to-b"][class*="from-white"],
+.nf-registration-wizard [class*="bg-white"],
+.nf-registration-wizard [class*="bg-[#FA"],
+.nf-registration-wizard [class*="bg-stone-100"],
+.nf-registration-wizard [class*="bg-stone-200"],
+.nf-registration-wizard [class*="bg-emerald-50"],
+.nf-registration-wizard [class*="bg-amber-50"],
+.nf-registration-wizard [class*="bg-amber-100"] {
+  background-color: rgba(27, 41, 73, 0.94) !important;
+  background-image: linear-gradient(145deg, rgba(28, 43, 77, 0.96), rgba(16, 26, 52, 0.98)) !important;
+  border-color: rgba(169, 185, 224, 0.26) !important;
+}
+
+.nf-registration-wizard [class*="text-[#121212]"],
+.nf-registration-wizard [class*="text-black"],
+.nf-registration-wizard [class*="text-stone-600"],
+.nf-registration-wizard [class*="text-[#666461]"],
+.nf-registration-wizard [class*="text-emerald-700"],
+.nf-registration-wizard [class*="text-emerald-800"],
+.nf-registration-wizard .text-emerald-700,
+.nf-registration-wizard .text-emerald-800,
+.nf-registration-wizard [class*="text-amber-700"],
+.nf-registration-wizard [class*="text-amber-800"],
+.nf-registration-wizard [class*="text-[#800020]"] {
+  color: #e2bf76 !important;
+}
+
+.nf-registration-wizard [class*="text-[#666461]"],
+.nf-registration-wizard [class*="text-stone-500"],
+.nf-registration-wizard [class*="text-stone-600"],
+.nf-registration-wizard [class*="text-black/60"] {
+  color: #c2cde2 !important;
+}
+
+.nf-registration-wizard input:not([type="checkbox"]):not([type="radio"]),
+.nf-registration-wizard select,
+.nf-registration-wizard textarea {
+  color: #f5f4f1 !important;
+  background-color: #0b1430 !important;
+  border-color: rgba(169, 185, 224, 0.30) !important;
+  color-scheme: dark;
+}
+
+.nf-registration-wizard input::placeholder,
+.nf-registration-wizard textarea::placeholder {
+  color: #9ba9c7 !important;
+}
+
+.nf-registration-wizard [class*="bg-emerald-100"] {
+  background-color: rgba(32, 81, 73, 0.72) !important;
+  color: #d7f3e8 !important;
+}
+
+.nf-registration-wizard [class*="bg-rose-950"] {
+  background-color: rgba(83, 28, 54, 0.48) !important;
+}
+
+.nf-registration-wizard button[class*="bg-stone-100"],
+.nf-registration-wizard button[class*="bg-stone-200"] {
+  background-image: none !important;
+  background-color: rgba(38, 53, 88, 0.92) !important;
+  color: #e2bf76 !important;
+}
+
+.nf-registration-wizard button[class*="bg-stone-100"]:hover,
+.nf-registration-wizard button[class*="bg-stone-200"]:hover {
+  background-color: rgba(128, 0, 32, 0.78) !important;
+  color: #fff !important;
+}
+
+@media (max-width: 768px) {
+  .nf-home-theme.bg-fixed {
+    background-attachment: scroll;
+  }
+}
+
+/* Theme treatment for the existing video hero without changing its markup. */
+.nf-home-theme #home-video-section::before {
+  content: '';
+  position: absolute;
+  z-index: 10;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 48% 46% at 50% 45%, rgba(103, 132, 230, 0.27), transparent 72%),
+    radial-gradient(ellipse 72% 52% at 50% 48%, rgba(137, 99, 190, 0.14), transparent 76%);
+  animation: nf-hero-light 12s ease-in-out infinite;
+}
+
+.nf-home-theme #home-video-section h1 {
+  text-shadow: 0 0 48px rgba(120, 145, 235, 0.34);
+}
+
+.nf-layer {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+}
+
+.nf-atmosphere {
+  z-index: 15;
+}
+
+.nf-lighting {
+  z-index: 21;
+  mix-blend-mode: screen;
+}
+
+.nf-light-pulse {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 58% 32% at 50% 100%, rgba(56, 82, 170, 0.24), transparent 76%);
+  animation: nf-pulse 7s ease-in-out infinite;
+}
+
+.nf-light-particles {
+  z-index: 22;
+  mix-blend-mode: screen;
+}
+
+.nf-crowd {
+  z-index: 25;
+  /* Single mask — crowd lives at the bottom of the viewport, fades before CTAs/cards */
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 7%, rgba(0, 0, 0, 0.7) 14%, transparent 24%);
+  mask-image: linear-gradient(to top, #000 0%, #000 7%, rgba(0, 0, 0, 0.7) 14%, transparent 24%);
+}
+
+.nf-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 58% 52% at 50% 42%, transparent 0%, transparent 42%, rgba(6, 8, 22, 0.28) 72%, rgba(4, 6, 16, 0.72) 100%),
+    linear-gradient(to top, rgba(4, 6, 18, 0.55) 0%, transparent 28%),
+    linear-gradient(to bottom, rgba(8, 10, 28, 0.18) 0%, transparent 18%);
+}
+
+.nf-haze {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 38%;
+  background: linear-gradient(to top, rgba(70, 80, 140, 0.18), rgba(40, 50, 100, 0.06) 45%, transparent);
+  filter: blur(18px);
+  opacity: 0.85;
+}
+
+.nf-stage-glow {
+  position: absolute;
+  left: 50%;
+  top: 18%;
+  width: min(72vw, 920px);
+  height: 42vh;
+  transform: translateX(-50%);
+  background: radial-gradient(ellipse at center, rgba(197, 160, 89, 0.16) 0%, rgba(128, 0, 32, 0.08) 38%, transparent 70%);
+  filter: blur(8px);
+  animation: nf-glow-breathe 8s ease-in-out infinite;
+}
+
+.nf-beam {
+  position: absolute;
+  bottom: -8%;
+  width: 18vw;
+  height: 78vh;
+  background: linear-gradient(to top, rgba(150, 170, 255, 0.02) 0%, rgba(160, 175, 255, 0.13) 35%, rgba(220, 200, 140, 0.16) 70%, transparent 100%);
+  clip-path: polygon(38% 100%, 62% 100%, 88% 0%, 12% 0%);
+  filter: blur(10px);
+  transform-origin: bottom center;
+  opacity: 0.55;
+}
+
+.nf-beam-a {
+  left: 8%;
+  animation: nf-beam-sway 14s ease-in-out infinite;
+}
+
+.nf-beam-b {
+  left: 38%;
+  width: 22vw;
+  animation: nf-beam-sway 18s ease-in-out infinite reverse;
+  opacity: 0.4;
+}
+
+.nf-beam-c {
+  right: 10%;
+  left: auto;
+  animation: nf-beam-sway 16s ease-in-out infinite 1.4s;
+}
+
+.nf-beam-d {
+  left: 28%;
+  width: 15vw;
+  background: linear-gradient(to top, rgba(144, 119, 235, 0.02) 0%, rgba(151, 127, 232, 0.16) 38%, rgba(192, 164, 255, 0.19) 72%, transparent 100%);
+  animation: nf-beam-sway 21s ease-in-out infinite reverse;
+}
+
+.nf-beam-e {
+  right: 32%;
+  width: 13vw;
+  background: linear-gradient(to top, rgba(112, 151, 255, 0.02) 0%, rgba(117, 154, 255, 0.16) 40%, rgba(189, 207, 255, 0.20) 72%, transparent 100%);
+  animation: nf-beam-sway 24s ease-in-out infinite 2.2s;
+}
+
+.nf-beam-white {
+  background: linear-gradient(to top, rgba(180, 198, 255, 0.02) 0%, rgba(180, 198, 255, 0.17) 38%, rgba(236, 239, 255, 0.23) 72%, transparent 100%);
+}
+
+.nf-beam-gold {
+  background: linear-gradient(to top, rgba(255, 197, 116, 0.02) 0%, rgba(245, 189, 122, 0.14) 40%, rgba(255, 220, 165, 0.19) 72%, transparent 100%);
+}
+
+.nf-beam-violet {
+  background: linear-gradient(to top, rgba(144, 119, 235, 0.02) 0%, rgba(151, 127, 232, 0.16) 38%, rgba(192, 164, 255, 0.19) 72%, transparent 100%);
+}
+
+.nf-crowd-photo {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 100%;
+  height: min(40vh, 420px);
+  max-width: none;
+  object-fit: cover;
+  object-position: center bottom;
+  opacity: 0.94;
+  transform: translateX(-50%);
+  filter: saturate(0.82) contrast(1.08);
+}
+
+.nf-particles {
+  position: absolute;
+  inset: 0;
+}
+
+.nf-particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255, 236, 190, 0.75);
+  box-shadow: 0 0 8px rgba(255, 220, 160, 0.55);
+  animation: nf-float 12s ease-in-out infinite;
+}
+
+.nf-bokeh {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(197, 160, 89, 0.18);
+  filter: blur(6px);
+  animation: nf-bokeh 10s ease-in-out infinite;
+}
+
+.nf-flash {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 0 18px 8px rgba(255, 255, 255, 0.55);
+  opacity: 0;
+  animation: nf-flash 28s ease-in-out infinite;
+}
+
+@keyframes nf-glow-breathe {
+  0%, 100% { opacity: 0.7; transform: translateX(-50%) scale(1); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.06); }
+}
+
+@keyframes nf-hero-light {
+  0%, 100% { opacity: 0.72; }
+  50% { opacity: 1; }
+}
+
+@keyframes nf-pulse {
+  0%, 100% { opacity: 0.46; }
+  50% { opacity: 0.88; }
+}
+
+@keyframes nf-beam-sway {
+  0%, 100% { transform: rotate(-6deg); }
+  50% { transform: rotate(7deg); }
+}
+
+@keyframes nf-float {
+  0%, 100% { transform: translateY(0) scale(1); opacity: 0.25; }
+  50% { transform: translateY(-28px) scale(1.15); opacity: 0.8; }
+}
+
+@keyframes nf-bokeh {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(1.12); }
+}
+
+@keyframes nf-flash {
+  0%, 89%, 100% { opacity: 0; }
+  91% { opacity: 0.72; }
+  94% { opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  .nf-beam-b,
+  .nf-hide-mobile {
+    display: none;
+  }
+
+  .nf-beam-a,
+  .nf-beam-c,
+  .nf-beam-d,
+  .nf-beam-e,
+  .nf-light-pulse,
+  .nf-particle,
+  .nf-bokeh,
+  .nf-stage-glow {
+    animation-duration: 22s !important;
+  }
+
+  .nf-stage-glow {
+    height: 28vh;
+    opacity: 0.7;
+    animation-duration: 22s;
+  }
+
+  .nf-crowd-photo {
+    width: 180vw;
+    height: min(34vh, 280px);
+  }
+
+  .nf-haze {
+    height: 24%;
+    filter: blur(10px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-beam,
+  .nf-particle,
+  .nf-bokeh,
+  .nf-flash,
+  .nf-light-pulse,
+  .nf-stage-glow,
+  .nf-home-theme #home-video-section::before {
+    animation: none !important;
+  }
+}
+
+/* Shared modal contrast pass: convert pale semantic surfaces and muted copy to the festival palette. */
+.nf-site-theme > .nf-modal-layer [class*="bg-amber-50"],
+.nf-site-theme > .nf-modal-layer [class*="bg-violet-50"],
+.nf-site-theme > .nf-modal-layer [class*="bg-emerald-50"],
+.nf-site-theme > .nf-modal-layer [class*="bg-rose-50"] {
+  background-color: rgba(26, 40, 72, 0.96) !important;
+  background-image: none !important;
+  border-color: rgba(197, 160, 89, 0.34) !important;
+}
+
+.nf-site-theme > .nf-modal-layer [class*="text-[#666461]"],
+.nf-site-theme > .nf-modal-layer [class*="text-[#64748B]"],
+.nf-site-theme > .nf-modal-layer [class*="text-gray-600"],
+.nf-site-theme > .nf-modal-layer [class*="text-gray-500"],
+.nf-site-theme > .nf-modal-layer [class*="text-stone-500"],
+.nf-site-theme > .nf-modal-layer [class*="text-stone-600"] {
+  color: #c2cde2 !important;
+}
+
+.nf-site-theme > .nf-modal-layer button[class*="bg-[#121212]"] {
+  background-color: #800020 !important;
+  color: #fff !important;
+}
+
+.nf-site-theme > .nf-modal-layer button[class*="bg-[#121212]"]:hover {
+  background-color: #9b1232 !important;
+}
