@@ -25,28 +25,42 @@ const MONGODB_URI = process.env.MONGODB_URI?.trim();
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@rvrjc.ac.in';
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD?.trim();
 
+let isConnecting = false;
+
 export async function connectDB() {
-  if (!MONGODB_URI) {
-    console.error('Database startup skipped: set MONGODB_URI in the server environment.');
+  if (mongoose.connection.readyState === 1) {
     return;
   }
 
-  mongoose.connection.on('error', (err) => {
-    console.error('MongoDB runtime error:', err);
-  });
-  mongoose.connection.on('disconnected', () => {
-    console.warn('MongoDB disconnected. Automatic reconnection active.');
-  });
+  const uri = process.env.MONGODB_URI?.trim();
+  if (!uri) {
+    console.error('Database startup skipped: set MONGODB_URI in the server environment.');
+    throw new Error('MONGODB_URI is not set in environment variables. Please add MONGODB_URI in Vercel project settings.');
+  }
+
+  if (isConnecting) {
+    while (mongoose.connection.readyState === 2) {
+      await new Promise(r => setTimeout(r, 100));
+    }
+    if (mongoose.connection.readyState === 1) return;
+  }
+
+  isConnecting = true;
 
   try {
     console.log('🔌 Connecting to MongoDB Atlas (mongobb database)...');
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(uri, {
+      serverSelectionTimeoutMS: 5000,
+    });
     console.log('✅ Connected successfully to MongoDB Atlas: mongobb');
 
     // Auto seed database if collections are empty
     await seedDatabaseIfEmpty();
-  } catch (err) {
-    console.error('❌ MongoDB Atlas connection error:', err);
+  } catch (err: any) {
+    console.error('❌ MongoDB Atlas connection error:', err.message);
+    throw err;
+  } finally {
+    isConnecting = false;
   }
 }
 

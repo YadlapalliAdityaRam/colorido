@@ -65,7 +65,33 @@ app.get('/api/health', (_req, res) => {
 });
 
 // Initialize MongoDB Atlas Connection & Seed Script
-connectDB();
+connectDB().catch(err => {
+  console.warn('Initial connectDB notice:', err.message);
+});
+
+// Ensure MongoDB Atlas connection is active before processing API requests (crucial for Vercel Serverless)
+app.use(async (req, res, next) => {
+  if (req.path.startsWith('/api') && req.path !== '/api/health') {
+    if (mongoose.connection.readyState !== 1) {
+      if (!process.env.MONGODB_URI) {
+        return res.status(500).json({
+          error: 'Database configuration missing',
+          message: 'MONGODB_URI is not set in environment variables. Please add MONGODB_URI to your Vercel Project Settings.',
+        });
+      }
+      try {
+        await connectDB();
+      } catch (err: any) {
+        return res.status(500).json({
+          error: 'Database connection failed',
+          message: err.message || 'Unable to connect to MongoDB Atlas',
+          hint: 'Verify MONGODB_URI and MongoDB Atlas Network Access whitelist (allow 0.0.0.0/0).',
+        });
+      }
+    }
+  }
+  next();
+});
 
 // Helper to log audit actions
 async function recordAuditLog(action: string, target: string, description: string, adminEmail = 'admin@rvrjc.ac.in') {
