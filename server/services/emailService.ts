@@ -73,7 +73,15 @@ function generateConfirmationEmailHtml(reg: EmailRegistrationData): string {
   const safeName = escapeHtml(reg.participantName);
   const safeRegId = escapeHtml(reg.registrationId);
   const safeEvent = escapeHtml(reg.eventTitle);
-  const safeCategory = escapeHtml(reg.eventType === 'sports' ? 'Sports Championship' : 'Cultural Festival');
+  const isSports = (reg.eventType?.toLowerCase() === 'sports') || reg.registrationId.startsWith('COL26-SPT');
+  const safeCategory = isSports ? 'Sports Championship' : 'Cultural Festival';
+  const categoryEmoji = isSports ? '⚽' : '🎭';
+  const categoryTrackName = isSports ? 'SPORTS CHAMPIONSHIP' : 'CULTURAL FESTIVAL';
+  const categoryTrackColor = isSports ? '#059669' : '#d97706';
+  const categoryBgColor = isSports ? '#ecfdf5' : '#fffbeb';
+  const categoryBorderColor = isSports ? '#10b981' : '#f59e0b';
+  const categoryTextColor = isSports ? '#065f46' : '#92400e';
+
   const safeCollege = escapeHtml(reg.collegeName);
   const safeEmail = escapeHtml(reg.participantEmail);
   const safePhone = escapeHtml(reg.participantPhone || '—');
@@ -125,7 +133,7 @@ function generateConfirmationEmailHtml(reg: EmailRegistrationData): string {
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>COLORIDO 2K26 Registration Confirmation</title>
+  <title>COLORIDO 2K26 Registration Confirmation - ${safeCategory}</title>
 </head>
 <body style="margin: 0; padding: 0; background-color: #f4f3ef; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased;">
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f3ef; padding: 24px 12px;">
@@ -136,19 +144,27 @@ function generateConfirmationEmailHtml(reg: EmailRegistrationData): string {
           
           <!-- Header Banner -->
           <tr>
-            <td style="background: linear-gradient(135deg, #800020 0%, #580016 100%); padding: 28px 24px; text-align: center; color: #ffffff;">
+            <td style="background: linear-gradient(135deg, #800020 0%, #580016 100%); padding: 28px 24px 22px; text-align: center; color: #ffffff;">
               <p style="margin: 0; font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #F3C85E;">
                 R.V.R. &amp; J.C. College of Engineering (Autonomous)
               </p>
               <h1 style="margin: 8px 0 4px; font-size: 26px; font-weight: 900; letter-spacing: 0.08em; color: #ffffff; font-family: Georgia, 'Times New Roman', serif;">
                 COLORIDO 2K26
               </h1>
-              <p style="margin: 0; font-size: 12px; color: #ffd6df; letter-spacing: 0.05em;">
+              <p style="margin: 0 0 10px; font-size: 12px; color: #ffd6df; letter-spacing: 0.05em;">
                 National Level Sports &amp; Cultural Festival
               </p>
+              
+              <!-- Category Pill Tag (SPORTS vs CULTURALS) -->
+              <div style="display: inline-block; background-color: ${categoryBgColor}; border: 1.5px solid ${categoryBorderColor}; border-radius: 20px; padding: 5px 16px; margin: 4px 0;">
+                <span style="font-size: 11px; font-weight: 800; color: ${categoryTextColor}; text-transform: uppercase; letter-spacing: 0.1em;">
+                  ${categoryEmoji} ${categoryTrackName}
+                </span>
+              </div>
+
               ${isTeam ? `
-              <div style="margin-top: 10px; display: inline-block; background-color: rgba(243, 200, 94, 0.18); border: 1px solid #F3C85E; border-radius: 20px; padding: 4px 14px;">
-                <span style="font-size: 11px; font-weight: 700; color: #F3C85E; text-transform: uppercase; letter-spacing: 0.1em;">
+              <div style="margin-top: 6px;">
+                <span style="font-size: 10px; font-weight: 700; color: #F3C85E; text-transform: uppercase; letter-spacing: 0.12em;">
                   ★ Team Captain Confirmation &amp; Squad Pass ★
                 </span>
               </div>
@@ -158,8 +174,8 @@ function generateConfirmationEmailHtml(reg: EmailRegistrationData): string {
 
           <!-- Body Content -->
           <tr>
-            <td style="padding: 28px 24px 20px;">
-              <p style="margin: 0 0 12px; font-size: 16px; color: #0f172a; font-weight: 600;">
+            <td style="padding: 26px 24px 20px;">
+              <p style="margin: 0 0 10px; font-size: 16px; color: #0f172a; font-weight: 600;">
                 ${isTeam ? `Hi Captain ${safeName},` : `Hi ${safeName},`}
               </p>
               <p style="margin: 0 0 16px; font-size: 14px; line-height: 1.6; color: #334155;">
@@ -170,8 +186,26 @@ function generateConfirmationEmailHtml(reg: EmailRegistrationData): string {
                 }
               </p>
 
+              <!-- Prominent Registered Track Box (SPORTS vs CULTURALS) -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 16px 0; background-color: ${categoryBgColor}; border-left: 4px solid ${categoryTrackColor}; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);">
+                <tr>
+                  <td style="padding: 12px 16px;">
+                    <span style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: ${categoryTextColor};">
+                      Registered Track:
+                    </span>
+                    <div style="font-size: 16px; font-weight: 900; color: ${categoryTextColor}; margin: 2px 0;">
+                      ${categoryEmoji} ${categoryTrackName}
+                    </div>
+                    <div style="font-size: 13px; color: #334155; margin-top: 3px;">
+                      Event: <strong style="color: #0f172a;">${safeEvent}</strong>
+                      ${isTeam ? ` &bull; Team: <strong style="color: #800020;">${safeTeam || 'Squad'}</strong>` : ''}
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
               <!-- Registration ID Prominent Callout -->
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 20px 0; background: #FFFBEB; border: 1.5px solid #F3C85E; border-radius: 10px; text-align: center;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 18px 0; background: #FFFBEB; border: 1.5px solid #F3C85E; border-radius: 10px; text-align: center;">
                 <tr>
                   <td style="padding: 16px;">
                     <p style="margin: 0 0 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #92400e;">
@@ -201,49 +235,54 @@ function generateConfirmationEmailHtml(reg: EmailRegistrationData): string {
                 <tr>
                   <td style="padding: 16px 18px;">
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size: 13px; color: #334155; line-height: 1.8;">
-                      <tr>
-                        <td style="width: 35%; color: #64748b; font-weight: 500;">
-                          ${isTeam ? 'Team Captain:' : 'Name:'}
+                      <!-- Highlighted Category Row -->
+                      <tr style="background-color: ${categoryBgColor};">
+                        <td style="width: 35%; color: ${categoryTextColor}; font-weight: 700; padding: 6px 8px; border-radius: 4px 0 0 4px;">
+                          Category / Track:
                         </td>
-                        <td style="font-weight: 600; color: #0f172a;">${safeName}</td>
+                        <td style="font-weight: 800; color: ${categoryTextColor}; padding: 6px 8px; border-radius: 0 4px 4px 0;">
+                          ${categoryEmoji} ${safeCategory}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="color: #64748b; font-weight: 500; padding: 4px 8px;">Event:</td>
+                        <td style="font-weight: 600; color: #0f172a; padding: 4px 8px;">${safeEvent}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #64748b; font-weight: 500; padding: 4px 8px;">Registration ID:</td>
+                        <td style="font-family: monospace; font-weight: 700; color: #800020; padding: 4px 8px;">${safeRegId}</td>
+                      </tr>
+                      <tr>
+                        <td style="color: #64748b; font-weight: 500; padding: 4px 8px;">
+                          ${isTeam ? 'Team Captain:' : 'Participant Name:'}
+                        </td>
+                        <td style="font-weight: 600; color: #0f172a; padding: 4px 8px;">${safeName}</td>
                       </tr>
                       ${safeTeam ? `
                       <tr>
-                        <td style="color: #64748b; font-weight: 500;">Team / Squad Name:</td>
-                        <td style="font-weight: 700; color: #800020;">${safeTeam}</td>
+                        <td style="color: #64748b; font-weight: 500; padding: 4px 8px;">Team / Squad Name:</td>
+                        <td style="font-weight: 700; color: #800020; padding: 4px 8px;">${safeTeam}</td>
                       </tr>
                       ` : ''}
                       <tr>
-                        <td style="color: #64748b; font-weight: 500;">Registration ID:</td>
-                        <td style="font-family: monospace; font-weight: 700; color: #800020;">${safeRegId}</td>
+                        <td style="color: #64748b; font-weight: 500; padding: 4px 8px;">College / Institution:</td>
+                        <td style="padding: 4px 8px;">${safeCollege}</td>
                       </tr>
                       <tr>
-                        <td style="color: #64748b; font-weight: 500;">Event:</td>
-                        <td style="font-weight: 600; color: #0f172a;">${safeEvent}</td>
+                        <td style="color: #64748b; font-weight: 500; padding: 4px 8px;">${isTeam ? 'Captain Email:' : 'Email:'}</td>
+                        <td style="padding: 4px 8px;">${safeEmail}</td>
                       </tr>
                       <tr>
-                        <td style="color: #64748b; font-weight: 500;">Category:</td>
-                        <td>${safeCategory}</td>
+                        <td style="color: #64748b; font-weight: 500; padding: 4px 8px;">${isTeam ? 'Captain Contact:' : 'Contact Phone:'}</td>
+                        <td style="padding: 4px 8px;">${safePhone}</td>
                       </tr>
                       <tr>
-                        <td style="color: #64748b; font-weight: 500;">College / Institution:</td>
-                        <td>${safeCollege}</td>
+                        <td style="color: #64748b; font-weight: 500; padding: 4px 8px;">Venue:</td>
+                        <td style="padding: 4px 8px;">${safeVenue}</td>
                       </tr>
                       <tr>
-                        <td style="color: #64748b; font-weight: 500;">${isTeam ? 'Captain Email:' : 'Email:'}</td>
-                        <td>${safeEmail}</td>
-                      </tr>
-                      <tr>
-                        <td style="color: #64748b; font-weight: 500;">${isTeam ? 'Captain Contact:' : 'Contact Phone:'}</td>
-                        <td>${safePhone}</td>
-                      </tr>
-                      <tr>
-                        <td style="color: #64748b; font-weight: 500;">Venue:</td>
-                        <td>${safeVenue}</td>
-                      </tr>
-                      <tr>
-                        <td style="color: #64748b; font-weight: 500;">Date &amp; Time:</td>
-                        <td>${safeDate}</td>
+                        <td style="color: #64748b; font-weight: 500; padding: 4px 8px;">Date &amp; Time:</td>
+                        <td style="padding: 4px 8px;">${safeDate}</td>
                       </tr>
                     </table>
 
@@ -252,20 +291,25 @@ function generateConfirmationEmailHtml(reg: EmailRegistrationData): string {
                 </tr>
               </table>
 
-              <!-- Event Instructions -->
+              <!-- Event Instructions (Tailored by Sports vs Culturals) -->
               <div style="background-color: #f8fafc; border-left: 3px solid #800020; padding: 12px 14px; margin-bottom: 20px; border-radius: 4px;">
                 <p style="margin: 0 0 6px; font-size: 13px; font-weight: 600; color: #0f172a;">
-                  ${isTeam ? 'Important Instructions for Team Captain:' : 'Important Instructions for Participants:'}
+                  Important Instructions for ${safeCategory}:
                 </p>
                 <ul style="margin: 0; padding-left: 18px; font-size: 12px; color: #475569; line-height: 1.6;">
+                  ${isSports ? `
+                  <li><strong>Sports Attire &amp; Kit:</strong> All participants must wear proper sportswear / team jerseys and appropriate footwear (non-marking shoes for indoor sports).</li>
+                  <li><strong>Reporting Time:</strong> Report to the sports ground / court at least 30 minutes before your match fixture for toss and roster check.</li>
+                  ` : `
+                  <li><strong>Audio Tracks &amp; Props:</strong> Submit your background tracks (MP3/WAV on USB drive) at the audio desk 45 minutes prior to performance.</li>
+                  <li><strong>Green Room Access:</strong> Green room access and staging prep is granted 1 hour before scheduled stage slot.</li>
+                  `}
                   ${isTeam ? `
                   <li><strong>Squad ID Verification:</strong> As Team Captain, ensure all registered squad members carry their valid College Student ID cards for physical roster verification.</li>
-                  <li><strong>Reporting Time:</strong> Report with your complete team to the venue coordinator at least 30 minutes before your match / event schedule for toss and bib allocation.</li>
                   <li><strong>Registration Pass:</strong> Present this Registration ID (<strong>${safeRegId}</strong>) at the reporting desk for official entry.</li>
                   ` : `
                   <li>Carry your original College Student ID Card along with this registration pass.</li>
                   <li>Report to the designated event venue at least 30 minutes before the scheduled start time.</li>
-                  <li>For team events, all registered squad members must be present for roster verification.</li>
                   `}
                 </ul>
               </div>
@@ -310,11 +354,19 @@ function generateConfirmationEmailHtml(reg: EmailRegistrationData): string {
   `.trim();
 }
 
+let lastGeneratedEmailHtml: string | null = null;
+
+export function getLastGeneratedEmailHtml(): string | null {
+  return lastGeneratedEmailHtml;
+}
+
 /**
  * Generates the clean plain-text fallback for the confirmation email.
  */
 function generateConfirmationEmailText(reg: EmailRegistrationData): string {
-  const category = reg.eventType === 'sports' ? 'Sports Championship' : 'Cultural Festival';
+  const isSports = (reg.eventType?.toLowerCase() === 'sports') || reg.registrationId.startsWith('COL26-SPT');
+  const category = isSports ? 'Sports Championship' : 'Cultural Festival';
+  const categoryTag = isSports ? '⚽ SPORTS CHAMPIONSHIP' : '🎭 CULTURAL FESTIVAL';
   const isTeam = reg.format === 'team' || Boolean(reg.teamName) || (reg.members && reg.members.length > 1);
 
   const squadText = isTeam && reg.members && reg.members.length > 0
@@ -326,11 +378,11 @@ function generateConfirmationEmailText(reg: EmailRegistrationData): string {
 Hi ${isTeam ? `Captain ${reg.participantName}` : reg.participantName},
 
 Congratulations! 🎉
-${isTeam ? `Your team "${reg.teamName || 'Squad'}" has been successfully registered for COLORIDO 2K26.` : 'Your registration for COLORIDO 2K26 has been successfully completed.'}
+Your registration for COLORIDO 2K26 has been successfully confirmed.
 
-${isTeam ? 'Team Registration Details' : 'Registration Details'}
-----------------------------------------------
-${isTeam ? `Team Captain:    ${reg.participantName}\nTeam / Squad:    ${reg.teamName || 'Squad'}\n` : `Name:            ${reg.participantName}\n`}Registration ID: ${reg.registrationId}
+FESTIVAL TRACK: ${categoryTag}
+==============================================
+${isTeam ? `Role:            Team Captain & Lead Registrant\nTeam / Squad:    ${reg.teamName || 'Squad'}\n` : `Participant:     ${reg.participantName}\n`}Registration ID: ${reg.registrationId}
 Event:           ${reg.eventTitle}
 Category:        ${category}
 College:         ${reg.collegeName}
@@ -338,10 +390,14 @@ Email:           ${reg.participantEmail}
 Phone:           ${reg.participantPhone || '—'}
 Venue:           ${reg.venueName || 'R.V.R. & J.C. Campus'}
 Date & Time:     ${reg.eventDate || '30 Sep - 02 Oct 2026'}
-----------------------------------------------
+==============================================
 ${squadText}
 
-${isTeam ? 'As Team Captain, please ensure all squad members carry their valid College Student ID cards for physical roster verification at least 30 minutes before your scheduled match/event.' : 'Please keep your Registration ID safe and bring it with you during the event.'}
+${isSports
+  ? 'Sports Instructions: Report in proper sports attire / team jersey with appropriate footwear. Report to the venue 30 minutes before your match fixture for toss and roster check.'
+  : 'Cultural Instructions: Submit your audio tracks (MP3/WAV on USB pendrive) at the audio desk 45 minutes prior to performance. Green room access is open 1 hour before scheduled time.'}
+
+${isTeam ? 'As Team Captain, please ensure all squad members carry their valid College Student ID cards for physical roster verification.' : 'Please keep your Registration ID safe and bring it with you during the event.'}
 
 See you at COLORIDO 2K26! 🏆🎭
 
@@ -417,14 +473,20 @@ export async function sendRegistrationConfirmationEmail(
     return { success: false, error: 'Invalid recipient email address' };
   }
 
+  const isSports = (registration.eventType?.toLowerCase() === 'sports') || registration.registrationId.startsWith('COL26-SPT');
+  const trackTag = isSports ? '⚽ [SPORTS]' : '🎭 [CULTURALS]';
   const isTeam = registration.format === 'team' || Boolean(registration.teamName) || (registration.members && registration.members.length > 1);
+
   const subject = isTeam && registration.teamName
-    ? `🎉 Congratulations Captain ${registration.participantName}! ${registration.teamName} Registration Confirmed - COLORIDO 2K26`
+    ? `${trackTag} Registration Confirmed: Captain ${registration.participantName} (${registration.teamName}) - COLORIDO 2K26`
     : (isTeam
-        ? `🎉 Congratulations Captain ${registration.participantName}! Your COLORIDO 2K26 Squad Registration is Confirmed`
-        : '🎉 Congratulations! Your COLORIDO 2K26 Registration is Confirmed');
+        ? `${trackTag} Registration Confirmed: Captain ${registration.participantName} - COLORIDO 2K26`
+        : `${trackTag} Registration Confirmed: ${registration.participantName} - ${registration.eventTitle} | COLORIDO 2K26`);
+
   const htmlContent = generateConfirmationEmailHtml(registration);
   const textContent = generateConfirmationEmailText(registration);
+
+  lastGeneratedEmailHtml = htmlContent;
 
   const brevoApiKey = process.env.BREVO_API_KEY || (process.env.EMAIL_PASSWORD?.startsWith('xsmtpsib-') ? process.env.EMAIL_PASSWORD : null);
   const fromRaw = process.env.EMAIL_FROM || (process.env.EMAIL_USER ? `"COLORIDO 2K26" <${process.env.EMAIL_USER}>` : '"COLORIDO 2K26" <adityaramyadlapalli@gmail.com>');

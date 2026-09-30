@@ -23,7 +23,7 @@ import {
   AuditLogModel,
   NotificationModel
 } from './models';
-import { sendRegistrationConfirmationEmail } from './services/emailService';
+import { sendRegistrationConfirmationEmail, getLastGeneratedEmailHtml } from './services/emailService';
 import type { EventItem, Registration, EventResult, CollegeLeaderboard } from '../src/types';
 
 const app = express();
@@ -704,6 +704,21 @@ app.post('/api/registrations/:id/resend-email', async (req, res) => {
     console.error('[Registration API] Resend email failed:', err);
     return res.status(500).json({ error: 'Failed to resend email', details: err.message });
   }
+});
+
+// Endpoint to preview the last generated HTML confirmation email in the browser
+app.get('/api/registrations/last-email-preview', (_req, res) => {
+  const html = getLastGeneratedEmailHtml();
+  if (!html) {
+    return res.status(404).send(`
+      <div style="font-family: sans-serif; padding: 40px; text-align: center;">
+        <h2>No registration confirmation email generated yet.</h2>
+        <p>Register a participant or team through the registration wizard, or trigger a resend to preview!</p>
+      </div>
+    `);
+  }
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.send(html);
 });
 
 app.put('/api/registrations/:id/status', async (req, res) => {
