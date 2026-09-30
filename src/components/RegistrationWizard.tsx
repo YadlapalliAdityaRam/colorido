@@ -291,7 +291,7 @@ export const RegistrationWizard: React.FC<RegistrationWizardProps> = ({
   )];
 
   return (
-    <div className="nf-modal-layer nf-registration-wizard fixed inset-0 z-[100] overflow-y-auto bg-black/60 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
+    <div className="nf-modal-layer nf-registration-wizard fixed inset-0 z-[100] overflow-y-auto bg-black/60 backdrop-blur-md flex items-center justify-center p-2 sm:p-4 animate-in fade-in duration-200">
       {/* Modal Surface Container */}
       <div
         className={`rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl flex flex-col relative transition-all duration-300 ${
@@ -322,7 +322,7 @@ export const RegistrationWizard: React.FC<RegistrationWizardProps> = ({
       >
         {/* Header */}
         <div
-          className={`p-5 flex items-center justify-between border-b ${
+          className={`p-4 sm:p-5 flex items-center justify-between border-b ${
             hasDarkCustomBg
               ? 'border-white/10 bg-black/40 backdrop-blur-md'
               : isSports
@@ -332,13 +332,13 @@ export const RegistrationWizard: React.FC<RegistrationWizardProps> = ({
         >
           <div>
             <span
-              className={`text-[10px] font-bold tracking-widest uppercase block ${
+              className={`text-[9px] sm:text-[10px] font-bold tracking-widest uppercase block ${
                 isCultural ? 'text-amber-400' : isSports ? 'text-emerald-700' : 'text-[#800020]'
               }`}
             >
               COLORIDO 2K26 {isCultural ? '· CULTURAL FESTIVAL' : isSports ? '· SPORTS CHAMPIONSHIP' : '· NATIONAL FESTIVAL'}
             </span>
-            <h3 className={`font-editorial font-bold text-lg ${hasDarkCustomBg ? 'text-white' : 'text-[#121212]'}`}>
+            <h3 className={`font-editorial font-bold text-base sm:text-lg ${hasDarkCustomBg ? 'text-white' : 'text-[#121212]'}`}>
               {step === 1 && !selectedCategoryType
                 ? 'SELECT FESTIVAL CATEGORY'
                 : step === 1
@@ -348,7 +348,7 @@ export const RegistrationWizard: React.FC<RegistrationWizardProps> = ({
           </div>
           <button
             onClick={onClose}
-            className={`p-2 rounded-lg transition-colors cursor-pointer ${
+            className={`p-2 rounded-lg transition-colors cursor-pointer shrink-0 ${
               hasDarkCustomBg
                 ? 'text-white/70 hover:text-white bg-white/10'
                 : 'text-[#666461] hover:text-[#121212] bg-black/5 hover:bg-black/10'
@@ -360,7 +360,7 @@ export const RegistrationWizard: React.FC<RegistrationWizardProps> = ({
 
         {/* Step Indicator */}
         <div
-          className={`px-6 py-3 flex items-center justify-between text-[11px] font-semibold border-b ${
+          className={`px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between text-[10px] sm:text-[11px] font-semibold border-b ${
             hasDarkCustomBg
               ? 'border-white/10 bg-black/30 text-white/60'
               : isSports
@@ -369,10 +369,10 @@ export const RegistrationWizard: React.FC<RegistrationWizardProps> = ({
           }`}
         >
           {[
-            { num: 1, label: selectedCategoryType ? `01 ${selectedCategoryType.toUpperCase()}` : '01 CATEGORY' },
-            { num: 2, label: '02 DETAILS & SQUAD' },
-            { num: 3, label: '03 REVIEW' },
-            { num: 4, label: '04 CONFIRM' },
+            { num: 1, label: selectedCategoryType ? `01 ${selectedCategoryType.toUpperCase()}` : '01 CATEGORY', short: '01 EVENT' },
+            { num: 2, label: '02 DETAILS & SQUAD', short: '02 SQUAD' },
+            { num: 3, label: '03 REVIEW', short: '03 REVIEW' },
+            { num: 4, label: '04 CONFIRM', short: '04 PASS' },
           ].map((s) => (
             <span
               key={s.num}
@@ -386,14 +386,15 @@ export const RegistrationWizard: React.FC<RegistrationWizardProps> = ({
                   : ''
               }
             >
-              {s.label}
+              <span className="sm:hidden">{s.short}</span>
+              <span className="hidden sm:inline">{s.label}</span>
             </span>
           ))}
         </div>
 
         {/* Wizard Body */}
         <div
-          className={`p-6 overflow-y-auto max-h-[72vh] space-y-4 ${
+          className={`p-4 sm:p-6 overflow-y-auto max-h-[76dvh] space-y-4 ${
             hasDarkCustomBg ? 'bg-black/20' : isSports ? 'bg-white/20' : 'bg-white'
           }`}
         >

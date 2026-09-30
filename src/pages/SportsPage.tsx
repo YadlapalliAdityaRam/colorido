@@ -139,14 +139,14 @@ export const SportsPage: React.FC<SportsPageProps> = ({
         <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/80 via-transparent to-black/30 z-20" />
 
         {/* Floating Slide Caption (compact glassmorphism card at bottom-left so image remains fully visible) */}
-        <div className="absolute bottom-6 left-6 sm:left-12 z-30 max-w-lg bg-black/65 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/20 shadow-2xl">
+        <div className="absolute bottom-4 left-3 right-3 sm:bottom-6 sm:left-12 sm:right-auto z-30 max-w-lg bg-black/75 sm:bg-black/65 backdrop-blur-md p-3.5 sm:p-5 rounded-2xl border border-white/20 shadow-2xl">
           <span className="text-[10px] sm:text-xs font-mono text-[#F3C85E] uppercase tracking-widest block font-bold">
             {heroSlides[currentSlideIndex].tag}
           </span>
-          <h2 className="festival-title-reveal font-cinzel font-bold text-lg sm:text-2xl text-white tracking-wide leading-tight mt-1">
+          <h2 className="festival-title-reveal font-cinzel font-bold text-base sm:text-2xl text-white tracking-wide leading-tight mt-1">
             {heroSlides[currentSlideIndex].title}
           </h2>
-          <p className="text-xs text-gray-200 font-sans mt-1 line-clamp-2">
+          <p className="text-[11px] sm:text-xs text-gray-200 font-sans mt-1 line-clamp-2">
             {heroSlides[currentSlideIndex].subtitle}
           </p>
         </div>
@@ -154,33 +154,33 @@ export const SportsPage: React.FC<SportsPageProps> = ({
         {/* Navigation Arrows */}
         <button
           onClick={prevSlide}
-          className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-3 rounded-full bg-black/50 hover:bg-black/80 text-white border border-white/20 backdrop-blur-md transition-all hover:scale-110 cursor-pointer"
+          className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-3 rounded-full bg-black/50 hover:bg-black/80 text-white border border-white/20 backdrop-blur-md transition-all hover:scale-110 cursor-pointer"
           aria-label="Previous slide"
         >
           <ChevronLeft className="w-5 h-5" />
         </button>
         <button
           onClick={nextSlide}
-          className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-3 rounded-full bg-black/50 hover:bg-black/80 text-white border border-white/20 backdrop-blur-md transition-all hover:scale-110 cursor-pointer"
+          className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 z-30 p-2 sm:p-3 rounded-full bg-black/50 hover:bg-black/80 text-white border border-white/20 backdrop-blur-md transition-all hover:scale-110 cursor-pointer"
           aria-label="Next slide"
         >
           <ChevronRight className="w-5 h-5" />
         </button>
 
-        {/* Slide Indicator Dots / Navigation Counter bottom right */}
-        <div className="absolute bottom-6 right-6 sm:right-12 z-30 flex items-center space-x-2 bg-black/60 backdrop-blur-md px-3.5 py-2 rounded-full border border-white/20 shadow-lg">
+        {/* Slide Indicator Dots / Navigation Counter */}
+        <div className="absolute top-4 right-4 sm:top-auto sm:bottom-6 sm:right-12 z-30 flex items-center space-x-1.5 sm:space-x-2 bg-black/70 backdrop-blur-md px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-full border border-white/20 shadow-lg">
           {heroSlides.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setCurrentSlideIndex(idx)}
-              className={`h-2 rounded-full transition-all cursor-pointer ${idx === currentSlideIndex
-                  ? 'w-6 bg-[#C5A059]'
-                  : 'w-2 bg-white/40 hover:bg-white'
+              className={`h-1.5 sm:h-2 rounded-full transition-all cursor-pointer ${idx === currentSlideIndex
+                  ? 'w-5 sm:w-6 bg-[#C5A059]'
+                  : 'w-1.5 sm:w-2 bg-white/40 hover:bg-white'
                 }`}
               aria-label={`Go to slide ${idx + 1}`}
             />
           ))}
-          <span className="text-[10px] font-mono text-white/90 pl-1 font-bold">
+          <span className="text-[9px] sm:text-[10px] font-mono text-white/90 pl-1 font-bold">
             0{currentSlideIndex + 1} / 0{heroSlides.length}
           </span>
         </div>

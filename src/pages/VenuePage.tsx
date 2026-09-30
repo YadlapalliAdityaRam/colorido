@@ -117,7 +117,7 @@ export const VenuePage: React.FC<VenuePageProps> = ({ onSelectEvent }) => {
               {error && !events.length ? 'Live data unavailable' : error ? 'Partial live data' : refreshing ? 'Updating live data…' : 'Live data'}
               {lastUpdated && !error && <span>· Updated {lastUpdated.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>}
             </span>
-            <button type="button" onClick={() => void refreshLiveData()} disabled={refreshing} className="inline-flex min-h-10 items-center gap-2 rounded-md border border-[#C5A059]/60 px-3 text-xs font-semibold text-white disabled:opacity-60" aria-label="Refresh live venue information">
+            <button type="button" onClick={() => void refreshLiveData()} disabled={refreshing} className="inline-flex min-h-10 items-center gap-2 rounded-md border border-[#C5A059]/60 bg-[#182544] hover:bg-[#223359] px-3.5 text-xs font-semibold text-white shadow-sm transition-colors disabled:opacity-60" aria-label="Refresh live venue information">
               <RefreshCw size={14} className={refreshing ? 'animate-spin' : ''} /> Refresh
             </button>
           </div>
@@ -136,12 +136,12 @@ export const VenuePage: React.FC<VenuePageProps> = ({ onSelectEvent }) => {
         <section className="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-3 gap-6 pt-4">
           <aside className="rounded-3xl border border-[#E5E2DC] bg-white p-5 shadow-sm">
             <div className="mb-4 flex items-center justify-between gap-3"><h2 className="font-editorial font-bold text-lg text-[#121212]">Scheduled Venues</h2><span className="text-xs font-mono text-[#666461]">{visibleVenues.length} listed</span></div>
-            <div className="mb-4 grid grid-cols-3 gap-1 rounded-lg border border-white/10 p-1" role="group" aria-label="Filter venues by event category">{(['all', 'cultural', 'sports'] as const).map(item => <button key={item} type="button" onClick={() => { setCategory(item); setActiveVenueId(null); }} aria-pressed={category === item} className={`rounded px-2 py-2 text-[10px] font-bold uppercase tracking-wide ${category === item ? 'bg-[#800020] text-white' : 'text-[#c2cde2] hover:bg-white/10'}`}>{item}</button>)}</div>
+            <div className="mb-4 grid grid-cols-3 gap-1 rounded-lg border border-[#E5E2DC] bg-[#FAF9F6] p-1" role="group" aria-label="Filter venues by event category">{(['all', 'cultural', 'sports'] as const).map(item => <button key={item} type="button" onClick={() => { setCategory(item); setActiveVenueId(null); }} aria-pressed={category === item} className={`rounded px-2 py-2 text-[10px] font-bold uppercase tracking-wide transition-colors ${category === item ? 'bg-[#800020] text-white shadow-xs' : 'text-[#666461] hover:text-[#121212]'}`}>{item}</button>)}</div>
             <div className="space-y-2" role="list" aria-label="Scheduled venues">
               {visibleVenues.map(venue => <button key={venue.id} type="button" onClick={() => setActiveVenueId(venue.id)} aria-pressed={activeVenue?.id === venue.id} className={`w-full rounded-xl border p-3 text-left transition-colors ${activeVenue?.id === venue.id ? 'border-[#C5A059] bg-[#182544]' : 'border-[#E5E2DC] bg-[#FAF9F6] hover:border-[#C5A059]'}`}>
-                <span className="flex items-start justify-between gap-3"><span className="font-semibold text-sm text-white">{venue.name}</span><MapPin aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[#C5A059]" /></span>
-                {venue.location && <span className="mt-1 block text-xs text-[#b8c3dc]">{venue.location}</span>}
-                <span className="mt-2 block text-[11px] text-[#C5A059]">{venue.events.filter(event => category === 'all' || event.type === category).length} scheduled events</span>
+                <span className="flex items-start justify-between gap-3"><span className={`font-semibold text-sm ${activeVenue?.id === venue.id ? 'text-white' : 'text-[#121212]'}`}>{venue.name}</span><MapPin aria-hidden="true" className="mt-0.5 h-4 w-4 shrink-0 text-[#C5A059]" /></span>
+                {venue.location && <span className={`mt-1 block text-xs ${activeVenue?.id === venue.id ? 'text-[#b8c3dc]' : 'text-[#666461]'}`}>{venue.location}</span>}
+                <span className={`mt-2 block text-[11px] font-medium ${activeVenue?.id === venue.id ? 'text-[#C5A059]' : 'text-[#800020]'}`}>{venue.events.filter(event => category === 'all' || event.type === category).length} scheduled events</span>
               </button>)}
             </div>
           </aside>

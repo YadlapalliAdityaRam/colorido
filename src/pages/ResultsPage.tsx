@@ -91,7 +91,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
 
         {/* Filter Bar: Category Tabs & Search */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#E5E2DC] pb-4">
-          <div className="flex space-x-2 text-xs font-mono uppercase tracking-widest">
+          <div className="flex flex-wrap items-center gap-2 text-xs font-mono uppercase tracking-widest">
             <button
               onClick={() => {
                 setEventTypeFilter('all');
@@ -131,7 +131,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
           </div>
 
           {/* Quick Search & Event Title Dropdown */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
             <div className="relative w-full sm:w-56">
               <Search className="w-3.5 h-3.5 text-[#666461] absolute left-3 top-2.5" />
               <input
@@ -147,7 +147,7 @@ export const ResultsPage: React.FC<ResultsPageProps> = ({
               <select
                 value={selectedEventTitle}
                 onChange={(e) => setSelectedEventTitle(e.target.value)}
-                className="px-3 py-2 rounded-xl bg-white border border-[#E5E2DC] text-xs font-bold text-[#121212] focus:border-[#121212] outline-none shadow-sm max-w-[200px] truncate"
+                className="w-full sm:w-auto px-3 py-2 rounded-xl bg-white border border-[#E5E2DC] text-xs font-bold text-[#121212] focus:border-[#121212] outline-none shadow-sm max-w-full sm:max-w-[200px] truncate"
               >
                 <option value="all">Filter By Event (All)</option>
                 {uniqueEventTitles.map((t) => (

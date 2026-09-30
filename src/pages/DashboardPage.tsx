@@ -49,22 +49,22 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
           <p className="text-xs font-mono text-[#666461] mt-1">{user.college} · {user.studentId}</p>
         </div>
 
-        <div className="flex space-x-6 border-b border-[#E5E2DC] pb-4 text-xs font-mono uppercase tracking-widest">
+        <div className="flex overflow-x-auto gap-4 sm:gap-6 border-b border-[#E5E2DC] pb-3 text-xs font-mono uppercase tracking-widest">
           <button
             onClick={() => setActiveTab('passes')}
-            className={`py-1 transition-all ${activeTab === 'passes' ? 'text-[#121212] font-bold border-b-2 border-[#121212]' : 'text-[#666461] hover:text-[#121212]'}`}
+            className={`whitespace-nowrap py-1 transition-all ${activeTab === 'passes' ? 'text-[#121212] font-bold border-b-2 border-[#121212]' : 'text-[#666461] hover:text-[#121212]'}`}
           >
             ENTRY PASSES ({myRegistrations.length})
           </button>
           <button
             onClick={() => setActiveTab('certificates')}
-            className={`py-1 transition-all ${activeTab === 'certificates' ? 'text-[#121212] font-bold border-b-2 border-[#121212]' : 'text-[#666461] hover:text-[#121212]'}`}
+            className={`whitespace-nowrap py-1 transition-all ${activeTab === 'certificates' ? 'text-[#121212] font-bold border-b-2 border-[#121212]' : 'text-[#666461] hover:text-[#121212]'}`}
           >
             CERTIFICATES
           </button>
           <button
             onClick={() => setActiveTab('profile')}
-            className={`py-1 transition-all ${activeTab === 'profile' ? 'text-[#121212] font-bold border-b-2 border-[#121212]' : 'text-[#666461] hover:text-[#121212]'}`}
+            className={`whitespace-nowrap py-1 transition-all ${activeTab === 'profile' ? 'text-[#121212] font-bold border-b-2 border-[#121212]' : 'text-[#666461] hover:text-[#121212]'}`}
           >
             PROFILE
           </button>
@@ -88,7 +88,7 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({
                       <p className="text-xs font-mono text-[#666461]">{reg.eventDate} · {reg.venueName}</p>
                     </div>
 
-                    <div className="flex space-x-2">
+                    <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                       <button
                         onClick={() => generateTicketPDF(reg)}
                         className="px-4 py-2 rounded-full bg-[#121212] hover:bg-[#2A2A2A] text-white text-xs font-semibold uppercase tracking-wider flex items-center space-x-1.5 transition-all shadow-sm"

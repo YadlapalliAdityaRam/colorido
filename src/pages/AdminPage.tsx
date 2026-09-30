@@ -861,14 +861,24 @@ export const AdminPage: React.FC<AdminPageProps> = ({
         </div>
       </aside>
 
+      {/* Mobile Sidebar Backdrop Overlay */}
+      {isMobileSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs lg:hidden animate-in fade-in duration-150"
+          onClick={() => setIsMobileSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       {/* 2. MAIN APPLICATION CONTENT AREA */}
       <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
         {/* TOP BAR */}
-        <header className="h-14 bg-white border-b border-stone-200 px-4 sm:px-6 flex items-center justify-between flex-shrink-0 z-30">
-          <div className="flex items-center gap-3 min-w-0">
+        <header className="h-14 bg-white border-b border-stone-200 px-3 sm:px-6 flex items-center justify-between flex-shrink-0 z-30">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
               onClick={() => setIsMobileSidebarOpen(true)}
-              className="lg:hidden p-1.5 rounded hover:bg-stone-100 text-stone-600"
+              className="lg:hidden p-1.5 rounded hover:bg-stone-100 text-stone-600 shrink-0"
+              aria-label="Open sidebar"
             >
               <Menu className="w-5 h-5" />
             </button>
@@ -886,8 +896,8 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 <span className="font-semibold text-stone-900 truncate">{activeEvent.title}</span>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
-                <h1 className="text-sm font-bold text-stone-900 uppercase tracking-wide">
+              <div className="flex items-center gap-2 min-w-0">
+                <h1 className="text-xs sm:text-sm font-bold text-stone-900 uppercase tracking-wide truncate">
                   {activeSection === 'dashboard' && 'Operations Dashboard'}
                   {activeSection === 'events' && 'Events Master Directory'}
                   {activeSection === 'registrations' && 'Registration Records'}
@@ -906,11 +916,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({
           </div>
 
           {/* Top Bar Actions */}
-          <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
             <button
               onClick={fetchBackendData}
               disabled={isRefreshing}
-              className="h-8 px-2.5 rounded bg-stone-50 border border-stone-200 hover:bg-stone-100 text-stone-700 text-xs font-medium flex items-center gap-1.5 transition-colors"
+              className="h-8 px-2 sm:px-2.5 rounded bg-stone-50 border border-stone-200 hover:bg-stone-100 text-stone-700 text-xs font-medium flex items-center gap-1.5 transition-colors"
               title="Refresh Data from Server"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-[#800020]' : ''}`} />
@@ -922,10 +932,11 @@ export const AdminPage: React.FC<AdminPageProps> = ({
                 resetForm();
                 setShowCreateModal(true);
               }}
-              className="h-8 px-3 rounded bg-[#800020] hover:bg-[#6b001a] text-white text-xs font-medium flex items-center gap-1.5 shadow-xs transition-colors"
+              className="h-8 px-2.5 sm:px-3 rounded bg-[#800020] hover:bg-[#6b001a] text-white text-xs font-medium flex items-center gap-1.5 shadow-xs transition-colors"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Create Event</span>
+              <span className="hidden sm:inline">Create Event</span>
+              <span className="sm:hidden">Event</span>
             </button>
 
             <div className="hidden md:flex items-center gap-2 pl-2 border-l border-stone-200 text-xs">

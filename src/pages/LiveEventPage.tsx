@@ -92,27 +92,30 @@ export const LiveEventPage: React.FC<LiveEventPageProps> = ({ slug, onBack }) =>
     <div className="min-h-screen bg-[#FAF9F6] text-[#121212] font-sans antialiased flex flex-col pb-20">
 
       {/* Top Banner Navigation */}
-      <header className="bg-white border-b border-[#E5E2DC] sticky top-0 z-40 px-6 py-4 flex items-center justify-between shadow-sm">
+      <header className="bg-white border-b border-[#E5E2DC] sticky top-0 z-40 px-3 sm:px-6 py-3 sm:py-4 flex items-center justify-between shadow-sm gap-2">
         <button
           onClick={onBack}
-          className="px-4 py-2 rounded-xl bg-[#FAF9F6] border border-[#E5E2DC] text-xs font-bold text-[#121212] hover:bg-[#E5E2DC] flex items-center space-x-2 transition-all"
+          className="px-3 sm:px-4 py-2 rounded-xl bg-[#FAF9F6] border border-[#E5E2DC] text-xs font-bold text-[#121212] hover:bg-[#E5E2DC] flex items-center space-x-1.5 sm:space-x-2 transition-all shrink-0"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>← Back to Fest</span>
+          <span className="hidden sm:inline">← Back to Fest</span>
+          <span className="sm:hidden">Back</span>
         </button>
 
-        <div className="flex items-center space-x-3">
-          <span className="flex items-center space-x-1.5 px-3 py-1 bg-rose-600 text-white rounded-full text-xs font-bold uppercase tracking-wider animate-pulse shadow-sm">
-            <Radio className="w-3.5 h-3.5" />
-            <span>LIVE COVERAGE</span>
+        <div className="flex items-center space-x-2 sm:space-x-3 shrink-0">
+          <span className="flex items-center space-x-1 sm:space-x-1.5 px-2.5 sm:px-3 py-1 bg-rose-600 text-white rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider animate-pulse shadow-sm">
+            <Radio className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+            <span className="hidden sm:inline">LIVE COVERAGE</span>
+            <span className="sm:hidden">LIVE</span>
           </span>
 
           <button
             onClick={handleCopyLink}
-            className="px-3.5 py-1.5 rounded-xl bg-[#FAF9F6] border border-[#E5E2DC] text-xs font-bold text-[#121212] hover:bg-[#E5E2DC] flex items-center space-x-1.5 transition-colors"
+            className="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-[#FAF9F6] border border-[#E5E2DC] text-xs font-bold text-[#121212] hover:bg-[#E5E2DC] flex items-center space-x-1 sm:space-x-1.5 transition-colors"
           >
             <Copy className="w-3.5 h-3.5 text-[#B8860B]" />
-            <span>{copiedLink ? 'Copied!' : 'Copy Live Link'}</span>
+            <span className="hidden sm:inline">{copiedLink ? 'Copied!' : 'Copy Live Link'}</span>
+            <span className="sm:hidden">{copiedLink ? 'Copied!' : 'Share'}</span>
           </button>
         </div>
       </header>

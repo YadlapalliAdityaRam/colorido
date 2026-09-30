@@ -126,20 +126,21 @@ export const SchedulePage: React.FC<SchedulePageProps> = ({
           {/* Day Filters */}
           <div className="flex flex-wrap items-center gap-1.5 font-mono uppercase tracking-wider">
             {[
-              { id: 0, label: 'ALL DAYS' },
-              { id: 1, label: '30 SEP (DAY 1)' },
-              { id: 2, label: '01 OCT (DAY 2)' },
-              { id: 3, label: '02 OCT (DAY 3)' },
+              { id: 0, label: 'ALL DAYS', short: 'ALL' },
+              { id: 1, label: '30 SEP (DAY 1)', short: 'DAY 1' },
+              { id: 2, label: '01 OCT (DAY 2)', short: 'DAY 2' },
+              { id: 3, label: '02 OCT (DAY 3)', short: 'DAY 3' },
             ].map(d => (
               <button
                 key={d.id}
                 onClick={() => setSelectedDay(d.id)}
-                className={`px-3 py-1.5 rounded-lg transition-colors ${selectedDay === d.id
-                    ? 'bg-white text-[#111827] font-bold'
+                className={`px-2.5 sm:px-3 py-1.5 rounded-lg transition-colors ${selectedDay === d.id
+                    ? 'bg-white text-[#111827] font-bold shadow-xs'
                     : 'text-slate-300 hover:bg-white/10 hover:text-white'
                   }`}
               >
-                {d.label}
+                <span className="sm:hidden">{d.short}</span>
+                <span className="hidden sm:inline">{d.label}</span>
               </button>
             ))}
           </div>
