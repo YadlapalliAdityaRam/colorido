@@ -620,11 +620,14 @@ app.post('/api/registrations', async (req, res) => {
     let emailSent = false;
     let emailError: string | undefined;
 
+    const isTeam = newReg.format === 'team' || Boolean(newReg.teamName) || (newReg.members && newReg.members.length > 1);
+    const captainEmail = (newReg.participantEmail || newReg.members?.[0]?.email || '').trim().toLowerCase();
+
     try {
       const emailResult = await sendRegistrationConfirmationEmail({
         registrationId: newReg.registrationId,
         participantName: newReg.participantName,
-        participantEmail: newReg.participantEmail,
+        participantEmail: captainEmail,
         participantPhone: newReg.participantPhone,
         collegeName: newReg.collegeName,
         studentId: newReg.studentId,
@@ -652,12 +655,54 @@ app.post('/api/registrations', async (req, res) => {
       emailSent,
       emailError: emailSent ? undefined : (emailError || 'Confirmation email could not be delivered'),
       message: emailSent
-        ? `Registration confirmed! A confirmation email has been sent to ${newReg.participantEmail}.`
+        ? (isTeam
+            ? `Registration confirmed! A confirmation email and squad pass have been sent to Team Captain at ${captainEmail}.`
+            : `Registration confirmed! A confirmation email has been sent to ${newReg.participantEmail}.`)
         : 'Registration successful, but we could not send the confirmation email right now. Please save your Registration ID.',
     });
   } catch (err: any) {
     console.error('[Registration API] Registration failed:', err);
     res.status(500).json({ error: 'Failed to create registration', details: err.message });
+  }
+});
+
+// Endpoint to resend confirmation email (for testing or admin resend)
+app.post('/api/registrations/:id/resend-email', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const reg = await RegistrationModel.findOne({
+      $or: [{ id }, { registrationId: id }],
+    });
+
+    if (!reg) {
+      return res.status(404).json({ error: 'Registration not found' });
+    }
+
+    const captainEmail = (reg.participantEmail || reg.members?.[0]?.email || '').trim().toLowerCase();
+    const result = await sendRegistrationConfirmationEmail({
+      registrationId: reg.registrationId,
+      participantName: reg.participantName,
+      participantEmail: captainEmail,
+      participantPhone: reg.participantPhone,
+      collegeName: reg.collegeName,
+      studentId: reg.studentId,
+      eventTitle: reg.eventTitle,
+      eventType: reg.eventType,
+      eventDate: reg.eventDate,
+      venueName: reg.venueName,
+      format: reg.format,
+      teamName: reg.teamName,
+      members: reg.members,
+    });
+
+    if (result.success) {
+      return res.json({ success: true, message: `Email dispatched successfully to ${captainEmail}`, provider: result.provider });
+    }
+
+    return res.status(502).json({ success: false, error: result.error || 'Failed to dispatch email' });
+  } catch (err: any) {
+    console.error('[Registration API] Resend email failed:', err);
+    return res.status(500).json({ error: 'Failed to resend email', details: err.message });
   }
 });
 
