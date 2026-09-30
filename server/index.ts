@@ -617,48 +617,55 @@ app.post('/api/registrations', async (req, res) => {
     await recordAuditLog('REGISTRATION_CREATED', regId, `Registered ${participantName} (${collegeName}) for ${event.title}`);
 
     // 5. Send Automated Confirmation Email (only after successful database persistence)
+    // 5. Send Automated Confirmation Email (STRICTLY FOR TEAM CAPTAIN ONLY)
     let emailSent = false;
     let emailError: string | undefined;
 
     const isTeam = newReg.format === 'team' || Boolean(newReg.teamName) || (newReg.members && newReg.members.length > 1);
     const captainEmail = (newReg.participantEmail || newReg.members?.[0]?.email || '').trim().toLowerCase();
 
-    try {
-      const emailResult = await sendRegistrationConfirmationEmail({
-        registrationId: newReg.registrationId,
-        participantName: newReg.participantName,
-        participantEmail: captainEmail,
-        participantPhone: newReg.participantPhone,
-        collegeName: newReg.collegeName,
-        studentId: newReg.studentId,
-        eventTitle: newReg.eventTitle,
-        eventType: newReg.eventType,
-        eventDate: newReg.eventDate,
-        venueName: newReg.venueName,
-        format: newReg.format,
-        teamName: newReg.teamName,
-        members: newReg.members,
-      });
+    if (isTeam && captainEmail) {
+      try {
+        console.log(`[Registration API] Dispatching confirmation email exclusively to Team Captain (${captainEmail})...`);
+        const emailResult = await sendRegistrationConfirmationEmail({
+          registrationId: newReg.registrationId,
+          participantName: newReg.participantName,
+          participantEmail: captainEmail,
+          participantPhone: newReg.participantPhone,
+          collegeName: newReg.collegeName,
+          studentId: newReg.studentId,
+          eventTitle: newReg.eventTitle,
+          eventType: newReg.eventType,
+          eventDate: newReg.eventDate,
+          venueName: newReg.venueName,
+          format: newReg.format,
+          teamName: newReg.teamName,
+          members: newReg.members,
+        });
 
-      emailSent = emailResult.success;
-      if (!emailResult.success) {
-        emailError = emailResult.error || 'Email could not be delivered';
+        emailSent = emailResult.success;
+        if (!emailResult.success) {
+          emailError = emailResult.error || 'Confirmation email could not be delivered to Team Captain';
+        }
+      } catch (mailErr: any) {
+        console.error(`[Registration API] Team Captain email dispatch exception for ${regId}:`, mailErr.message);
+        emailError = mailErr.message;
       }
-    } catch (mailErr: any) {
-      console.error(`[Registration API] Email dispatch exception for ${regId}:`, mailErr.message);
-      emailError = mailErr.message;
+    } else {
+      console.log(`[Registration API] Solo participant registration for ${cleanEmail} - email dispatch skipped (emails are sent strictly to Team Captains).`);
     }
 
     // 6. Return Response to Frontend (Registration is preserved regardless of email delivery)
     res.status(201).json({
       ...newReg.toObject(),
       emailSent,
-      emailError: emailSent ? undefined : (emailError || 'Confirmation email could not be delivered'),
-      message: emailSent
-        ? (isTeam
-            ? `Registration confirmed! A confirmation email and squad pass have been sent to Team Captain at ${captainEmail}.`
-            : `Registration confirmed! A confirmation email has been sent to ${newReg.participantEmail}.`)
-        : 'Registration successful, but we could not send the confirmation email right now. Please save your Registration ID.',
+      isTeam,
+      emailError: isTeam && !emailSent ? (emailError || 'Confirmation email could not be delivered to Team Captain') : undefined,
+      message: isTeam
+        ? (emailSent
+            ? `🎉 Team Registration Confirmed! A confirmation email and squad pass have been sent to Team Captain at ${captainEmail}.`
+            : 'Team registration successful, but confirmation email could not be delivered right now. Please save your Team Registration ID.')
+        : 'Registration successful! Your official COLORIDO 2K26 pass has been issued.',
     });
   } catch (err: any) {
     console.error('[Registration API] Registration failed:', err);

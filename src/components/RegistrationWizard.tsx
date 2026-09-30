@@ -1232,13 +1232,19 @@ export const RegistrationWizard: React.FC<RegistrationWizardProps> = ({
                   <p className={`text-xs leading-relaxed ${hasDarkCustomBg ? 'text-amber-300' : 'text-amber-800'}`}>
                     You were already registered for this event. Your existing Registration ID is displayed above.
                   </p>
-                ) : confirmedReg.emailSent ? (
-                  <p className={`text-xs leading-relaxed ${hasDarkCustomBg ? 'text-emerald-300' : 'text-emerald-800'}`}>
-                    A confirmation email has been sent to <strong className="font-semibold underline">{confirmedReg.participantEmail}</strong>
-                  </p>
+                ) : isTeam ? (
+                  confirmedReg.emailSent ? (
+                    <p className={`text-xs leading-relaxed ${hasDarkCustomBg ? 'text-emerald-300' : 'text-emerald-800'}`}>
+                      🎉 Official confirmation email &amp; squad pass dispatched to Team Captain at <strong className="font-semibold underline">{confirmedReg.participantEmail}</strong>
+                    </p>
+                  ) : (
+                    <p className={`text-xs leading-relaxed ${hasDarkCustomBg ? 'text-amber-300' : 'text-amber-800'}`}>
+                      Team registration successful! Note: Team Captain confirmation email is pending delivery (save your Team Registration ID).
+                    </p>
+                  )
                 ) : (
                   <p className={`text-xs leading-relaxed ${hasDarkCustomBg ? 'text-stone-300' : 'text-stone-600'}`}>
-                    Registration successful, but we couldn't send the confirmation email right now. Please save your Registration ID.
+                    Registration successful! Your official COLORIDO 2K26 pass has been issued.
                   </p>
                 )}
               </div>
