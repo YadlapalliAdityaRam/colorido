@@ -23,6 +23,7 @@ import {
   AuditLogModel,
   NotificationModel
 } from './models';
+import { sendRegistrationConfirmationEmail } from './services/emailService';
 import type { EventItem, Registration, EventResult, CollegeLeaderboard } from '../src/types';
 
 const app = express();
@@ -517,10 +518,51 @@ app.post('/api/registrations', async (req, res) => {
   try {
     const { eventId, participantName, participantEmail, participantPhone, collegeName, studentId, format, teamName, members, department, year } = req.body;
 
+    // 1. Validation
+    if (!eventId) {
+      return res.status(400).json({ error: 'Event ID is required' });
+    }
+    if (!participantName || !String(participantName).trim()) {
+      return res.status(400).json({ error: 'Participant name is required' });
+    }
+    if (!participantEmail || !String(participantEmail).trim() || !String(participantEmail).includes('@')) {
+      return res.status(400).json({ error: 'A valid participant email address is required' });
+    }
+    if (!collegeName || !String(collegeName).trim()) {
+      return res.status(400).json({ error: 'College name is required' });
+    }
+
     const event = await EventModel.findOne({ id: eventId });
     if (!event) return res.status(404).json({ error: 'Event not found' });
     if (event.seatsLeft <= 0) return res.status(400).json({ error: 'Event registration is full!' });
 
+    const cleanEmail = String(participantEmail).trim().toLowerCase();
+    const cleanStudentId = studentId ? String(studentId).trim() : '';
+
+    // 2. Duplicate Registration Prevention
+    const duplicateQuery: any = {
+      eventId: event.id,
+      status: { $ne: 'REJECTED' },
+      $or: [
+        { participantEmail: new RegExp(`^${escapeRegex(cleanEmail)}$`, 'i') },
+      ],
+    };
+    if (cleanStudentId) {
+      duplicateQuery.$or.push({ studentId: cleanStudentId });
+    }
+
+    const existingReg = await RegistrationModel.findOne(duplicateQuery);
+    if (existingReg) {
+      console.log(`[Registration API] Duplicate registration prevented for ${cleanEmail} in event "${event.title}"`);
+      return res.status(200).json({
+        ...existingReg.toObject(),
+        isDuplicate: true,
+        emailSent: false,
+        message: `You are already registered for ${event.title} with Registration ID ${existingReg.registrationId}.`,
+      });
+    }
+
+    // 3. Unique Registration ID Generation
     const prefix = event.type === 'sports' ? 'COL26-SPT' : 'COL26-CUL';
     const regId = `${prefix}-${Math.floor(1000 + Math.random() * 9000)}`;
 
@@ -532,16 +574,19 @@ app.post('/api/registrations', async (req, res) => {
           college: (m.college || collegeName || '').trim(),
           email: (m.email || (idx === 0 ? participantEmail : '')).trim(),
           phone: (m.phone || (idx === 0 ? participantPhone : '')).trim(),
+          role: m.role || (idx === 0 ? 'Captain / Team Lead' : `Player #${idx + 1}`),
         }))
       : [{
-          name: participantName,
-          rollNumber: studentId,
-          studentId,
-          college: collegeName,
-          email: participantEmail,
-          phone: participantPhone,
+          name: String(participantName).trim(),
+          rollNumber: cleanStudentId,
+          studentId: cleanStudentId,
+          college: String(collegeName).trim(),
+          email: cleanEmail,
+          phone: participantPhone ? String(participantPhone).trim() : '',
+          role: 'Solo Competitor',
         }];
 
+    // 4. Save to Database
     const newReg = await RegistrationModel.create({
       id: `reg-${Date.now()}`,
       registrationId: regId,
@@ -550,11 +595,11 @@ app.post('/api/registrations', async (req, res) => {
       eventType: event.type,
       eventDate: event.dateTime,
       venueName: event.venueName,
-      participantName,
-      participantEmail,
-      participantPhone,
-      collegeName,
-      studentId,
+      participantName: String(participantName).trim(),
+      participantEmail: cleanEmail,
+      participantPhone: participantPhone ? String(participantPhone).trim() : '',
+      collegeName: String(collegeName).trim(),
+      studentId: cleanStudentId,
       department: department || 'Engineering',
       year: year || '3rd Year',
       format: format || event.format,
@@ -570,8 +615,48 @@ app.post('/api/registrations', async (req, res) => {
     await event.save();
 
     await recordAuditLog('REGISTRATION_CREATED', regId, `Registered ${participantName} (${collegeName}) for ${event.title}`);
-    res.status(201).json(newReg);
+
+    // 5. Send Automated Confirmation Email (only after successful database persistence)
+    let emailSent = false;
+    let emailError: string | undefined;
+
+    try {
+      const emailResult = await sendRegistrationConfirmationEmail({
+        registrationId: newReg.registrationId,
+        participantName: newReg.participantName,
+        participantEmail: newReg.participantEmail,
+        participantPhone: newReg.participantPhone,
+        collegeName: newReg.collegeName,
+        studentId: newReg.studentId,
+        eventTitle: newReg.eventTitle,
+        eventType: newReg.eventType,
+        eventDate: newReg.eventDate,
+        venueName: newReg.venueName,
+        format: newReg.format,
+        teamName: newReg.teamName,
+        members: newReg.members,
+      });
+
+      emailSent = emailResult.success;
+      if (!emailResult.success) {
+        emailError = emailResult.error || 'Email could not be delivered';
+      }
+    } catch (mailErr: any) {
+      console.error(`[Registration API] Email dispatch exception for ${regId}:`, mailErr.message);
+      emailError = mailErr.message;
+    }
+
+    // 6. Return Response to Frontend (Registration is preserved regardless of email delivery)
+    res.status(201).json({
+      ...newReg.toObject(),
+      emailSent,
+      emailError: emailSent ? undefined : (emailError || 'Confirmation email could not be delivered'),
+      message: emailSent
+        ? `Registration confirmed! A confirmation email has been sent to ${newReg.participantEmail}.`
+        : 'Registration successful, but we could not send the confirmation email right now. Please save your Registration ID.',
+    });
   } catch (err: any) {
+    console.error('[Registration API] Registration failed:', err);
     res.status(500).json({ error: 'Failed to create registration', details: err.message });
   }
 });

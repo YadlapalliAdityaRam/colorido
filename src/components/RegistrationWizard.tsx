@@ -1177,10 +1177,16 @@ export const RegistrationWizard: React.FC<RegistrationWizardProps> = ({
               <div>
                 <span
                   className={`text-[10px] font-bold uppercase tracking-widest block ${
-                    isCultural ? 'text-amber-300' : isSports ? 'text-emerald-700' : 'text-[#666461]'
+                    confirmedReg.isDuplicate
+                      ? 'text-amber-500'
+                      : isCultural
+                        ? 'text-amber-300'
+                        : isSports
+                          ? 'text-emerald-700'
+                          : 'text-[#666461]'
                   }`}
                 >
-                  REGISTRATION CONFIRMED
+                  {confirmedReg.isDuplicate ? 'ALREADY REGISTERED' : '🎉 REGISTRATION SUCCESSFUL!'}
                 </span>
                 <h3 className={`font-editorial font-bold text-xl mt-1 ${hasDarkCustomBg ? 'text-white' : 'text-[#121212]'}`}>
                   COLORIDO 2K26 OFFICIAL PASS
@@ -1217,6 +1223,23 @@ export const RegistrationWizard: React.FC<RegistrationWizardProps> = ({
                   <span className="text-[11px] block mt-0.5 text-stone-500 font-mono">
                     Team: {confirmedReg.teamName} ({confirmedReg.members?.length || targetPlayerLimit} Players)
                   </span>
+                )}
+              </div>
+
+              {/* Email Delivery Status Message */}
+              <div className="max-w-sm mx-auto text-center px-4 py-1">
+                {confirmedReg.isDuplicate ? (
+                  <p className={`text-xs leading-relaxed ${hasDarkCustomBg ? 'text-amber-300' : 'text-amber-800'}`}>
+                    You were already registered for this event. Your existing Registration ID is displayed above.
+                  </p>
+                ) : confirmedReg.emailSent ? (
+                  <p className={`text-xs leading-relaxed ${hasDarkCustomBg ? 'text-emerald-300' : 'text-emerald-800'}`}>
+                    A confirmation email has been sent to <strong className="font-semibold underline">{confirmedReg.participantEmail}</strong>
+                  </p>
+                ) : (
+                  <p className={`text-xs leading-relaxed ${hasDarkCustomBg ? 'text-stone-300' : 'text-stone-600'}`}>
+                    Registration successful, but we couldn't send the confirmation email right now. Please save your Registration ID.
+                  </p>
                 )}
               </div>
 

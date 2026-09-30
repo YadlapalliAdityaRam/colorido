@@ -110,6 +110,10 @@ export interface Registration {
   status: 'confirmed' | 'pending' | 'cancelled';
   isCheckedIn: boolean;
   createdAt: string;
+  emailSent?: boolean;
+  emailError?: string;
+  isDuplicate?: boolean;
+  message?: string;
 }
 
 export interface Venue {
