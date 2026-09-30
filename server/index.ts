@@ -1354,6 +1354,10 @@ app.use((err: any, _req: express.Request, res: express.Response, _next: express.
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`⚡ COLORIDO 2K26 Super Admin API Server running at http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`⚡ COLORIDO 2K26 Super Admin API Server running at http://localhost:${PORT}`);
+  });
+}
+
+export default app;
